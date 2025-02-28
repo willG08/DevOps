@@ -1,0 +1,42 @@
+name: Build and Push Docker Image to GHCR
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Log in to GitHub Container Registry (GHCR)
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.GHCR_USERNAME }}  # The GitHub username
+          password: ${{ secrets.GHCR_TOKEN }}  # GitHub token for authentication
+          registry: ghcr.io
+
+      # Step 3: Build the Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/willg08/devops/starwars-api:latest .
+      
+      # sha is the commit hash of the current commit, for added security
+      # docker tag ghcr.io/$ {{ github.repository }}/starwars-api:latest ghcr.io/$ {{ github.repository }}/starwars-api:${{ github.sha }}
+
+      # Step 4: Push the Docker image to GHCR
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/willg08/devops/starwars-api:latest
+      
+      # sha is the commit hash of the current commit, for added security
+      # docker push ghcr.io/$ {{ github.repository }}/starwars-api:$ {{ github.sha }}
