@@ -22,7 +22,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}  # The GitHub username
-          password: ${{ secrets.PASSWORD }}  # GitHub token for authentication
+          password: ${{ secrets.DOCKER_PASSWORD }}  # GitHub token for authentication
           registry: ghcr.io
 
       # Step 3: Build the Docker image
