@@ -28,7 +28,7 @@ jobs:
       # Step 3: Build the Docker image
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/starwars-api:latest .
+          docker build -t ghcr.io/willg08/devops/starwars-api:latest .
       
       # sha is the commit hash of the current commit, for added security
       # docker tag ghcr.io/$ {{ github.repository }}/starwars-api:latest ghcr.io/$ {{ github.repository }}/starwars-api:${{ github.sha }}
@@ -36,7 +36,7 @@ jobs:
       # Step 4: Push the Docker image to GHCR
       - name: Push Docker image
         run: |
-          docker push ghcr.io/${{ github.repository }}/starwars-api:latest
+          docker push ghcr.io/willg08/devops/starwars-api:latest
       
       # sha is the commit hash of the current commit, for added security
       # docker push ghcr.io/$ {{ github.repository }}/starwars-api:$ {{ github.sha }}
