@@ -1,17 +1,26 @@
 Star Wars API Starships and Pilots Information
+
 A brief explanation of your approach:
-    This project retrieves and displays information about starships and pilots from the Star Wars API (SWAPI). It includes details such as name, model, crew, passengers, starship class, and more for each starship. Each pilot has information for their name, height, mass, hair color, and more printed to the console. The project also collects unique URLs for pilots and films, among others, associated with the starships and pilots.
+    
+This project retrieves and displays information about starships and pilots from the Star Wars API (SWAPI). It includes details such as name, model, crew, passengers, starship class, and more for each starship. Each pilot has information for their name, height, mass, hair color, and more printed to the console. The project also collects unique URLs for pilots and films, among others, associated with the starships and pilots.
 
 Step-by-step instructions on how to pull the Docker image and run the container:
 User Instructions, Accessing GHCR Image:
-    1. Open Docker Desktop on your computer or download it if you haven't already.
-     Docker needs to be running in order to download the Docker image and run the container.
-    2. Run this command in the terminal to download the Docker image from GHCR
-    docker pull ghcr.io/willg08/devops/starwars-api:latest
-    3. Run this command in the terminal to run the Docker container on GHCR
-    docker run --rm ghcr.io/willg08/devops/starwars-api:latest
 
-Host Instructions, Building your own Docker Image:
+    1. Open Docker Desktop on your computer or download it if you haven't already.
+     Docker needs to be running in order to download the Docker image
+
+    2. Copy and paste this command in the terminal to download the Docker image from GHCR
+    docker pull ghcr.io/willg08/devops/starwars-api:latest
+    
+    3. Copy and paste this command in the terminal to run the Docker container on GHCR
+    docker run --rm ghcr.io/willg08/devops/starwars-api:latest
+    
+    4. For any questions contact willgunther9@gmail.com
+
+
+Host (Repository Owner) Instructions, Building your own Docker Image:
+
     1. Build the Docker image locally
     docker build -t ghcr.io/willg08/devops/starwars-api:latest .
 
@@ -30,8 +39,11 @@ Host Instructions, Building your own Docker Image:
     6. Run this command in the terminal to run the Docker project
     docker run --rm ghcr.io/willg08/devops/starwars-api:latest
 
+    7. Navigate to the Github user page, click the Packages tab, click Package Settings, change the visibility to Public, Share the subsequent docker pull command
+
 
 Any additional notes on assumptions or design choices.
+    
     Assumptions:
     The project assumes that the Star Wars API (SWAPI) is available and reliable throughout the execution. This includes assuming that the API will return consistent data in the expected format (JSON). There is a method to catch errors with the api retrieving information, but without that API there isn't any use to the project so far. As of now we assume the API will provide valid data for starships and pilots, such as names, models, crew size, etc., without unexpected errors or missing fields. A potential issue of the project would be if the project has an API request rate limiting or blocking. If rate limits were encountered, the program would need further handling for these situations. We have an assumption that the data returned by the API is always structured in the same format, particularly with fields like results, next, and nested lists such as pilots and films. 
     
@@ -39,8 +51,11 @@ Any additional notes on assumptions or design choices.
     This project is hosted on GHCR so it can be ran on any computer with Docker by running two commands, pull and run. One nice feature is the get_data_from_api() method. This method uses a retry mechanism in case of timeouts when fetching data from the API. The get_data_from_api function will retry up to three times if it encounters a timeout, with a 5-second wait between retries. This is designed to handle potential network issues or temporary API unavailability. It will also display an error message if the status code is not valid. Sets are used to store unique pilot URLs, film URLs, species URLs, vehicle URLs, and starship URLs. These sets are now ready for further manipulation without redundant references to pilots, films, or another category. By using a set, you ensure that each pilot and film URL is listed only once, regardless of how many times they appear in different starships. The code uses a while loop to handle pagination by continuously fetching data from the API until there is no next page. This design is chosen to ensure that the program can handle potentially large amounts of data without overwhelming the user or running into memory issues. The project separates the retrieval and display of starship and pilot information, allowing for clarity in code structure and better organization. The starships_url retrieves data about starships, and unique pilots are collected and processed separately. The program prints a limited amount of information for both starships and pilots, primarily focusing on key attributes like name, model, crew, height, and gender. Some attributes are commented out to avoid unnecessary complexity and clutter in the output, but they could easily be added if needed. The formatted sets are also printed out at the bottom of the output to be out of the way but clear that they are properly formatted for further use. The code is structured in a way that it can be easily extended to include additional information, such as other API keys or attributes of starships and pilots, without requiring a major redesign. There are also clear headers to separate sections in the code and output for easy viewing. The outputted counters next to both the starships and pilots for organization are used for quickly checking the amount of starships and pilots 
 
 A section discussing production deployment considerations
+
 1.Container Orchestration & Scaling:
+    
     1.1.Deployment using orchestration tools (e.g., Kubernetes, Docker Swarm).
+    
     ANSWER: First we should compare the orchestrations tools to determine the complexity, scale and needs of this project. Kubernetes is a powerful, open-source container orchestration platform designed to automate the deployment, scaling, and management of containerized applications. It is suitable for more complex or large-scale projects. Docker Swarm is Docker's native container orchestration tool. It's more lightweight and simpler to set up and use than Kubernetes but still provides many useful features for scaling Docker applications. 
     
     Overall, I would choose Docker Swarm for this project due to simplicity, cost-effectiveness, and minimal infrastructure needs. This application doesn’t require the extensive complexity that Kubernetes brings. With Docker Swarm, scaling and management of a few services (such as simple GET requests to the Star Wars API) or other APIs are much easier to handle. There are not a ton of services needed for this project and Docker Swarm provides enough scalability and ease of use without incurring extra costs that Kubernetes would. Unless we change the purpose of this project, add a large amount of services, or get an extremely large amount of volume to the website we should have enough functionality and computing power for Docker Swarm. It is important to keep in mind that while Docker Swarm is sufficient for our current needs, Kubernetes is better for larger scale growth and more complex applications, so this decision should be reevaluated periodically.
@@ -51,6 +66,7 @@ A section discussing production deployment considerations
     One of the biggest advantages of Kubernetes is Kubernetes can automatically increase or decrease the number of pods (containers) based on CPU usage or custom metrics such as network traffic or latency. For a larger Kubernetes deployment, you could use a Cluster Autoscaler that automatically adjusts the size of your cluster based on resource needs. Kubernetes also supports scaling up individual pods by increasing their resources (CPU and memory) instead of scaling the number of pods. As you can see the scaling process is much more autonomous with the Kubernetes system, but the functionality is probably over the top for what we are looking for on this project. Due to the ease of use, cheaper price, and sufficient functionality is offered for Docker Swarm I believe that is the best choice.
 
     Price Estimates assuming Low Traffic, less than 100 users a day, 10 to 20 requests per minute for peak traffic
+    
     Docker Swarm:
     AWS: $10 to $20 a month
         EC2 Instance (t3.micro, 1 vCPU, 1 GB RAM): Around $8.47 per month (on-demand pricing).
@@ -84,7 +100,9 @@ A section discussing production deployment considerations
         Data Transfer Costs: $0.09 per GB.
 
 2.Monitoring & Logging:
+    
     2.1.Tools and techniques to monitor the application’s health and performance.
+    
     ANSWER: Prometheus is an open-source monitoring tool that collects and stores metrics as time-series data. It works well for tracking metrics like request rates, CPU usage, memory usage, and error rates. Grafana is an open-source visualization tool that can be paired with Prometheus. It allows you to build dashboards to visually monitor metrics in real-time. You can use Prometheus to monitor the performance of the Docker containers, such as CPU usage, memory consumption, request counts, error rates, etc. Grafana helps you visualize these metrics on a dashboard for easy monitoring.
 
     2.2.Strategies for centralized logging (e.g., ELK Stack, Fluentd).
@@ -93,21 +111,86 @@ A section discussing production deployment considerations
     ELK Stack is a widely used solution for centralized logging using Elasticsearch, Logstash, and Kibana. Elasticsearch allows for quick and complex searches across massive datasets by storing logs, enabling fast log retrieval. This can help with finding errors in the system, speeding up user interactions, better CPU usage, and speeding up system events. Logstash is a data processing pipeline that collects, parses, and transforms log data from various sources and sends it to Elasticsearch for storage. Kibana is a visualization tool that helps to analyze and monitor logs stored in Elasticsearch. It provides dashboards for exploring and understanding log data.
  
 3.CI/CD Pipeline:
+    
     3.1.How you would integrate your Docker build process into a CI/CD pipeline.
     Steps for automated testing, security scanning, and deployment.
+    
     ANSWER: To integrate my Docker build into a continuous integration, continuous delivery pipeline, I would use GitHub Actions because I am already using GitHub for version control. GitHub Actions, through on triggers (e.g., when pushing to the main branch), can automatically trigger Docker container and image builds using docker build commands. It can also deploy to Docker Swarm by using Docker commands, such as pushing Docker images to a container registry or deploying them to a Swarm cluster. I can add automated testing steps (unit tests, integration tests) within the workflow, ensuring that any code changes are thoroughly tested before deployment. GitHub Actions can also trigger deployment to a test/staging environment, and even production, using Docker Swarm. GitHub Actions supports integration with Prometheus and Grafana for monitoring and ELK Stack for centralized logging. CodeQL is a code analysis tool that helps identify security vulnerabilities and code quality issues by analyzing source code through custom queries. To deploy CodeQL, you can integrate it into your CI/CD pipeline using GitHub Actions, where it automatically scans your repository for vulnerabilities and generates detailed reports during pull requests or commits. CodeQL is built by GitHub and can be used alongside Dependabot for better results.
 
 4.Security & Reliability:
+    
     4.1.Security considerations (e.g., vulnerability scanning, minimal base images, secrets management).
+    
     ANSWER: For security scanning, I would integrate a Docker image scanning tool such as Trivy within the GitHub Actions workflow. Trivy can scan the Docker images for vulnerabilities, including outdated dependencies, known CVEs (Common Vulnerabilities and Exposures), and insecure configurations, before pushing the images to any registry. This helps to ensure that only secure images are deployed to production. Additionally, I would use Dependabot within GitHub Actions to automatically scan the project’s dependencies for known vulnerabilities. Dependabot can create pull requests to update insecure dependencies as soon as vulnerabilities are discovered, ensuring that the codebase remains up to date and secure. For secrets management, I would use GitHub Secrets to securely store sensitive information such as API keys, database passwords, and other secrets needed by the application. GitHub Actions integrates with GitHub Secrets to safely inject these values into workflows without exposing them in code. We may need a database in the future to save user profiles for the project. To reduce the attack surface, I would also ensure the use of minimal base images for Docker. Using slim images or minimal base images (such as Alpine Linux) helps to reduce the potential vulnerabilities by minimizing the number of packages and dependencies in the image. Finally, I would implement regular security audits, using tools like CodeQL or SonarQube, to continuously check for potential code vulnerabilities, security flaws, or bad practices in the repository and codebase.
 
     4.2.Ensuring reliability and availability (e.g., health checks, redundancy, fault tolerance).
+    
     ANSWER: For ensuring reliability and availability, I would implement health checks for the Docker containers. Docker’s built-in HEALTHCHECK instruction would be used to periodically test whether each container is running correctly. If a container fails the health check, it can be restarted automatically, ensuring that the application remains available. To improve redundancy, I would deploy the application using Docker Swarm, which allows for easy scaling of containers and ensures that there are multiple instances of the application running across different nodes. This provides failover capabilities, so if one instance fails, others can handle the load. For fault tolerance, I would set up replicas in Docker Swarm, ensuring that there are multiple copies of each service running. This provides high availability and ensures that the application remains operational even if a service or node fails. Additionally, I would integrate auto-scaling to scale the services based on traffic or load. This can be achieved through Docker Swarm’s auto-scaling features or integrating with monitoring tools like Prometheus and Grafana. These tools can provide alerts when the system is under heavy load, triggering the scaling of services to handle increased demand.
 
 5.Configuration Management:
+    
     5.1.Handling configuration settings for different environments (development, staging, production) using environment variables or configuration files.
+    
     ANSWER: Using Docker, environment variables can be passed into the container through the docker-compose.yml file or directly in the Dockerfile. For example, in docker-compose.yml, you can set different values for each environment. For example, variables like API endpoints, database connections, or any environment-specific secrets (e.g., API keys) can be set differently for development, staging, and production environments. In addition to environment variables, configuration files can be used to store non-sensitive, environment-specific settings (like logging levels, API configurations, etc.). These files can be maintained separately for each environment (e.g., config.dev.json, config.prod.json) and placed in the appropriate directories. For instance, for a Python-based project, you could use .env files to store environment-specific configurations, and a library like python-dotenv can help load them. Each environment (development, staging, production) could have a separate .env file that gets loaded accordingly.
 
-6.Document the workflow in your README, explaining the process and benefits of using CI/CD in your workflow.
-    Workflow:
+6.Document the workflow in your README
 
+    6.1.1.Explain the process of the workflow
+    
+    ANSWER:
+    Below you will see my commented workflow document, it includes creating a type of event listener to execute the steps, running on the latest version of Ubuntu, granting the necessary permissions for the repository, reading the code from the repository, log into the Github Container Registry, my github username and password are hid in the secrets and variables in github, build the docker image, and push the docker image. By executing these steps in the docker workflow file we can automate the login, building, and pushing of the program. By reading in the code, using the latest version of Ubuntu, and automating the building and pushing of the image we ensure we are using the latest changes every time the image is accessed. By using secret variables we are able to ensure that sensitive information is not exposed.
+
+    6.1.2.Explain the benefits of using CI/CD in your workflow.
+
+    ANSWER: 
+    Implementing a Continuous Integration and Continuous Deployment (CI/CD) process using GitHub Actions brings multiple benefits to the development workflow. By creating an event listener that triggers on push and pull requests to the main branch, the process ensures that code changes are continuously integrated and tested, which enhances code quality and reduces the risk of integration issues. Running the workflow on the latest version of Ubuntu ensures a consistent and up-to-date environment, minimizing discrepancies between development and production environments. Pushing the Docker image to GHCR automates the deployment process, making the latest version of the application readily available for use. This automation reduces manual intervention, speeds up the deployment process, and allows developers to focus on coding rather than on operational tasks. Overall, this CI/CD process promotes a more efficient, reliable, and secure development lifecycle, leading to faster delivery of high-quality software.
+    
+########### Name of the Dockerfile
+name: Build and Push Docker Image to GHCR
+
+########### Creates a type of event listener to execute the below steps when main is pushed or a pull request is opened or updated
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+########### Defines what will be executed when the event above is activated, this then runs on the latest version of Ubuntu
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+
+    ########### Grants the necessary permissions to the Github Token used in the workflow
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    
+    steps:
+      ########### Step 1: Checks out or reads the code from the Repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+
+      ########### Step 2: Logs into the Github Container Registry
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          # The GitHub username and token are stored as secrets in the repository settings under "Secrets and Variables"
+          username: ${{ secrets.GHCR_USERNAME }}  
+          password: ${{ secrets.GHCR_TOKEN }} 
+          registry: ghcr.io
+
+      ########### Step 3: Builds the Docker Image
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/willg08/devops/starwars-api:latest .
+    
+      ########### Step 4: Pushes the Docker Image
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/willg08/devops/starwars-api:latest
