@@ -2,7 +2,7 @@ Star Wars API Starships and Pilots Information
 A brief explanation of your approach:
     This project retrieves and displays information about starships and pilots from the Star Wars API (SWAPI). It includes details such as name, model, crew, passengers, starship class, and more for each starship. Each pilot has information for their name, height, mass, hair color, and more printed to the console. The project also collects unique URLs for pilots and films, among others, associated with the starships and pilots.
 
-Step-by-step instructions on how to build the Docker image and run the container:
+Step-by-step instructions on how to pull the Docker image and run the container:
 User Instructions, Accessing GHCR Image:
     1. Open Docker Desktop on your computer or download it if you haven't already.
      Docker needs to be running in order to download the Docker image and run the container.
