@@ -47,8 +47,3 @@ jobs:
       - name: Push Docker image
         run: |
           docker push ghcr.io/willg08/devops/starwars-api:latest
-
-      ########### Step 5: Runs the Docker Image
-      - name: Run Docker image
-        run: |
-          docker run --rm ghcr.io/willg08/devops/starwars-api:latest
