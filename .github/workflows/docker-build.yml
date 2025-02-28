@@ -21,7 +21,7 @@ jobs:
       - name: Log in to GHCR
         uses: docker/login-action@v2
         with:
-          username: ${{ github.actor }}  # The GitHub username
+          username: ${{ secrets.USERNAME }}  # The GitHub username
           password: ${{ secrets.GHCR_TOKEN }}  # GitHub token for authentication
 
       # Step 3: Build the Docker image
