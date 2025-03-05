@@ -37,73 +37,68 @@ def get_data_from_api(url, retries=0):
         # Print the error message and return None
         print(f"An error occurred: {e}")
         return None 
+    
 
+ ###################Starships#######################
 def get_starships():
-    global unique_pilots, unique_starship_films
-
-    ###################Starships#######################
-    # Divider line
-    print("\n" + "="*50)  
-    # Starships Header
-    print("Star Wars Starships Information")  
-    # Divider Line
-    print("="*50)
 
     # Define the URL for the Star Wars API Endpoint for Starships 
     starships_url = "https://swapi.dev/api/starships/"
 
-    # Create a unique list of all pilot urls
+    # Initialize the list of starships
+    starships = []
+
+    # Create a unique list of all pilot urls, used with the get_pilots function
     unique_pilots = set()
-
-    # Create a unique list of all film urls, commented out because it is not in use
-    unique_starship_films = set()
-
-    # Iterator for starship count for easier reading
-    iterator = 1
 
     # List all of the starships in the API
     # While there is still a next page, keep iterating through the pages to get the data
     while True:
         # Get the data for starships from the current page
         x = get_data_from_api(starships_url)
+
+        # If the data is None, break the loop
+        if x is None:
+            break
+
         # Loop through the starships of the current page of the API
         for starship in x["results"]:
-            # Print the starship header with starship number
-            print(f"\nStarship {iterator}")
-            # Increment the iterator
-            iterator += 1
 
-            # Print the starship details
-            print(f"Name: {starship['name']}")
-            print(f"Starship Class: {starship['starship_class']}")
-            print(f"Model: {starship['model']}")
-            print(f"Length: {starship['length']}")
-            print(f"Crew: {starship['crew']}")
-            print(f"Passengers: {starship['passengers']}")
-            print(f"Cost in Credits: {starship['cost_in_credits']}")
+            # Store all of the starship information in a starship dictionary
+            starship_dict = {
+                "Name": starship['name'],
+                "Model": starship['model'],
+                "Manufacturer": starship['manufacturer'],
+                "Cost in Credits": starship['cost_in_credits'],
+                "Length": starship['length'],
+                "Max Atmosphering Speed": starship['max_atmosphering_speed'],
+                "Crew": starship['crew'],
+                "Passengers": starship['passengers'],
+                "Cargo Capacity": starship['cargo_capacity'],
+                "Consumables": starship['consumables'],
+                "Hyperdrive Rating": starship['hyperdrive_rating'],
+                "MGLT": starship['MGLT'],
+                "Starship Class": starship['starship_class'],
+                "Pilots": starship['pilots'],
+                "Films": starship['films'],
+                "Created": starship['created'],
+                "Edited": starship['edited'],
+                "URL": starship['url']
+            }
 
-            # Additional features that are not currently used in the program
-            # print(f"Manufacturer: {starship['manufacturer']}")
-            # print(f"Max Atmosphering Speed: {starship['max_atmosphering_speed']}")
-            # print(f"Cargo Capacity: {starship['cargo_capacity']}")
-            # print(f"Consumables: {starship['consumables']}")
-            # print(f"Hyperdrive Rating: {starship['hyperdrive_rating']}")
-            # print(f"MGLT: {starship['MGLT']}")
-            # print(f"Created: {starship['created']}")
-            # print(f"Edited: {starship['edited']}")
-            # print(f"URL: {starship['url']}")
+            
+            # Append the dictionary to the list
+            starships.append(starship_dict)
 
-            # Add the pilot to the set of unique pilots
+            # Used in the get_pilots function, Add the pilot to the set of unique pilots
             unique_pilots.update(starship['pilots'])
-
-            # Add the film to the set of unique films
-            unique_starship_films.update(starship['films'])
 
         # After retrieving the information from this page select the next page of the API 
         next = x["next"]
 
         # If there is no next page, break the loop
         if next is None:
+            return starships, unique_pilots
             break
 
         # Select the next page of the API
@@ -111,56 +106,186 @@ def get_starships():
             # Store the url for the next page of the API
             starships_url = next
 
-def get_pilots():
-    global unique_pilot_films, unique_pilot_species, unique_pilot_vehicles, unique_pilot_starships
-    ###################Pilots#######################
-    # Divider Line
-    print("\n" + "="*50) 
-    # Pilot header
-    print("Star Wars Pilots Information")  
+
+def print_starships(all_starships, all_people):
+    # Divider line
+    print("\n" + "="*50)  
+    # Starships Header
+    print("Star Wars Starships Information")  
     # Divider Line
     print("="*50)
 
-    # Create a unique list of film, species, vehicle, and starship urls attached to a pilot, commented out because it is not in use
-    unique_pilot_films = set()
-    unique_pilot_species = set()
-    unique_pilot_vehicles = set()
-    unique_pilot_starships = set()
-
-    # Reset Iterator for pilot count
     iterator = 1
+
+    # Print the starship header with starship number
+    for starship in all_starships:
+        # Print the starship header with starship number
+        print(f"\nStarship {iterator}")
+        # Increment the iterator
+        iterator += 1
+        # Print the starship details
+        print(f"Name: {starship['Name']}")
+        print(f"Starship Class: {starship['Starship Class']}")
+        print(f"Model: {starship['Model']}")
+        print(f"Length: {starship['Length']}")
+        print(f"Crew: {starship['Crew']}")
+        print(f"Passengers: {starship['Passengers']}")
+        print(f"Cost in Credits: {starship['Cost in Credits']}")
+
+        # Check if the pilots list is empty
+        if starship['Pilots'] == []:
+            # Print the pilots header
+            print("Pilots: None")
+        else:
+            # Print the pilots header
+            print("Pilots:", end=" ")
+            # Set first Pilot to true
+            first_pilot = True
+
+            # Look through the list of people 
+            for pilot in all_people:
+                # If the current pilot's url is found in the starships' list of pilot URLs print it out
+                if pilot['URL'] in starship['Pilots']:
+                    # If this is the first pilot don't print a comma and stay on the same print line
+                    if first_pilot:
+                        first_pilot = False
+                        print(f"{pilot['Name']}", end="")
+                    # If this is not the first pilot print a comma to separate the prior pilot
+                    else:
+                        print(f", {pilot['Name']}", end="")
+
+            # Print a blank line to clear the end of the document
+            print()
+
+
+###################Pilots#######################
+def get_pilots(unique_pilots):
+
+    # Create a unique list of film, species, vehicle, and starship urls attached to a pilot, commented out because it is not in use
+    pilots = []
 
     # Loop through the unique pilots set and retrieve data for each pilot
     for p in unique_pilots:
         # Get the data for pilots from the current page
         pilot = get_data_from_api(p)
 
-        # Print the pilot header with number
-        print(f"\nPilot {iterator}")
+        if pilot is None:
+            return None
 
+        # Create a Dictionary with all of the pilot information
+        pilot_dict = {
+                "Name": pilot['name'],
+                "Height": pilot['height'],
+                "Mass": pilot['mass'],
+                "Hair Color": pilot['hair_color'],
+                "Skin Color": pilot['skin_color'],
+                "Eye Color": pilot['eye_color'],
+                "Birth Year": pilot['birth_year'],
+                "Gender": pilot['gender'],
+                "Homeworld": pilot['homeworld'],
+                "Films": pilot['films'],
+                "Species": pilot['species'],
+                "Vehicles": pilot['vehicles'],
+                "Starships": pilot['starships'],
+                "Created": pilot['created'],
+                "Edited": pilot['edited'],
+                "URL": pilot['url']
+            }
+        
+        # Append the dictionary to the list
+        pilots.append(pilot_dict)
+
+    # Return pilots, a list of dictionaries for pilots once they are all collected
+    return pilots
+
+def print_people(people):
+    # Divider line
+    print("\n" + "="*50)
+    # Pilot Header
+    print("Star Wars People Information")
+    # Divider Line
+    print("="*50)
+
+    iterator = 1
+
+    # Print the pilot header with number
+    for person in people:
+        # Print the pilot header with number
+        print(f"\nPerson {iterator}")
         # Increment the iterator
         iterator += 1
+        # Print the relevant pilot details
+        print(f"Name: {person['Name']}")
+        print(f"Height: {person['Height']}")
+        print(f"Mass: {person['Mass']}")
+        print(f"Hair Color: {person['Hair Color']}")
+        print(f"Skin Color: {person['Skin Color']}")
+        print(f"Eye Color: {person['Eye Color']}")
+        print(f"Birth Year: {person['Birth Year']}")
+        print(f"Gender: {person['Gender']}")
+        # print(f"Homeworld: {person['Homeworld']}")
+        # print(f"Created: {person['Created']}")
+        # print(f"Edited: {person['Edited']}")
+        # print(f"URL: {person['URL']}")
 
-        # Print the pilot details
-        print(f"Name: {pilot['name']}")
-        print(f"Height: {pilot['height']}")
-        print(f"Mass: {pilot['mass']}")
-        print(f"Hair Color: {pilot['hair_color']}")
-        print(f"Skin Color: {pilot['skin_color']}")
-        print(f"Eye Color: {pilot['eye_color']}")
-        print(f"Birth Year: {pilot['birth_year']}")
-        print(f"Gender: {pilot['gender']}")
+###################Everyone###########################
+# Get Everyone from the Star Wars API
+def get_everyone():
+    # Define the URL for the Star Wars API Endpoint for people 
+    people_url = "https://swapi.dev/api/people/"
 
-        # Features that are not currently used in the program
-        # print(f"Homeworld: {pilot['homeworld']}")
-        # print(f"Created: {pilot['created']}")
-        # print(f"Edited: {pilot['edited']}")
-        # print(f"URL: {pilot['url']}")
+    # Initialize the list of people
+    people = []
 
-        unique_pilot_films.update(pilot['films'])
-        unique_pilot_species.update(pilot['species'])
-        unique_pilot_vehicles.update(pilot['vehicles'])
-        unique_pilot_starships.update(pilot['starships'])
+    # List all of the people_url in the API
+    # While there is still a next page, keep iterating through the pages to get the data
+    while True:
+        # Get the data for starships from the current page
+        x = get_data_from_api(people_url)
+
+        # If the data is None, break the loop
+        if x is None:
+            break
+
+        # Loop through the people_url of the current page of the API
+        for person in x["results"]:
+
+             # Create a Dictionary with all of the people's information
+            person_dict = {
+                "Name": person['name'],
+                "Height": person['height'],
+                "Mass": person['mass'],
+                "Hair Color": person['hair_color'],
+                "Skin Color": person['skin_color'],
+                "Eye Color": person['eye_color'],
+                "Birth Year": person['birth_year'],
+                "Gender": person['gender'],
+                "Homeworld": person['homeworld'],
+                "Films": person['films'],
+                "Species": person['species'],
+                "Vehicles": person['vehicles'],
+                "Starships": person['starships'],
+                "Created": person['created'],
+                "Edited": person['edited'],
+                "URL": person['url']
+            }
+        
+            # Append the dictionary to the list
+            people.append(person_dict)
+
+        # After retrieving the information from this page select the next page of the API 
+        next = x["next"]
+
+        # If there is no next page, break the loop
+        if next is None:
+            return people
+            break
+
+        # Select the next page of the API
+        else:
+            # Store the url for the next page of the API
+            people_url = next
+
 
 
 
@@ -170,46 +295,12 @@ print(f"\nStar Wars API Starships and Pilots Information")
 # Print Name 
 print("By: Will Gunther")
 
-get_starships()
+all_starships, unique_pilots = get_starships()
 
-get_pilots()
+#all_people = get_pilots(unique_pilots)
 
-###################Show Unique URL Lists#######################
-# Ask the user if they want to see the unique lists of URLs, remove blank space and make lowercase
-show_unique_lists = input(f"\nDo you want to see the unique lists of URLs? (yes/no): ").strip().lower()
+all_people = get_everyone()
 
-if show_unique_lists == 'yes':
-    ###################Unique Starship URL Lists#######################
-    # Included this to show we have unique starship lists ready to be manipulated
+print_starships(all_starships, all_people)
 
-    # Divider Line
-    print("\n" + "="*50) 
-    # Pilot header
-    print("Star Wars Unique Starship URL Lists")  
-    # Divider Line
-    print("="*50)
-
-    # Print the unique lists of pilots and films from starships
-    print(f"\nUnique Pilots: {unique_pilots}")
-    print(f"\nUnique Starship films: {unique_starship_films}")
-
-    ###################Unique Pilot URL Lists#######################
-    # Included this to show we have unique pilot lists ready to be manipulated
-
-    # Divider Line
-    print("\n" + "="*50) 
-    # Pilot header
-    print("Star Wars Unique Pilot URL Lists")  
-    # Divider Line
-    print("="*50)
-
-    # Print the unique lists of pilots, films, species, vehicles, and starships from pilots
-    print(f"\nUnique Pilots: {unique_pilots}")
-    print(f"\nUnique Pilot films: {unique_pilot_films}")
-    print(f"\nUnique Pilot Species: {unique_pilot_species}")
-    print(f"\nUnique Pilot Vehicles: {unique_pilot_vehicles}")
-    print(f"\nUnique Pilot Starships: {unique_pilot_starships}\n")
-
-
-
-    ###################End of Program#######################
+#print_people(all_people)
